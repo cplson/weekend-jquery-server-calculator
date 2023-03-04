@@ -62,7 +62,23 @@ function postEquation(){
         }
     }).then(response => {
         console.log('Recieved response for POST');
+        getEquations();
     }).catch(response => {
         console.log("something went wrong");
+    })
+}
+
+// Send ajax GET request to recieve allEquations
+// from the server
+function getEquations(){
+    $.ajax({
+        method: 'GET',
+        url: '/equation'
+    }).then(response => {
+        console.log('GET - got a response from ther server',
+        response);
+        
+    }).catch(response => {
+        console.log('There was an error in GET');
     })
 }

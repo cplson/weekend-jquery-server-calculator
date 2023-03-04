@@ -17,7 +17,10 @@ app.listen(PORT, () => {
     // test server runs
     console.log('Server is listening on port:', PORT);
 })
-
+// GET - /equation
+app.get('/equation', (req, res) =>{
+    res.send(allEquations);
+})
 // POST - /equation
 app.post('/equation', (req, res) => {
     // test req.body
@@ -50,3 +53,4 @@ function evaluate(equation, operation){
     }
 
 }
+
