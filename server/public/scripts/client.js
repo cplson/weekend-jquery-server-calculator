@@ -74,8 +74,7 @@ function postEquation(){
 
 // Send ajax GET request to recieve allEquations
 // from the server
-function getEquations(){
-    
+function getEquations(){  
     $.ajax({
         method: 'GET',
         url: '/equation'
@@ -90,9 +89,12 @@ function getEquations(){
     })
 }
 
+// Clears the display on clear button click
 function clearDisplay(){
     $('#display').val('');
 }
+
+// renders the display and equationList on the DOM
 function render(response){
     // display the result for this equation
     let numberOfEquations = response.length - 1;
