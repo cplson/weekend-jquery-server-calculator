@@ -40,15 +40,36 @@ app.post('/equation', (req, res) => {
 function evaluate(equation, operation){
     // test evaluate
     console.log('in evaluate()');
-    // let operands = equation.split('+');
-    // console.log(operands);
+    let operands;
+    
     switch(operation){
         case 'add':
-            let operands = equation.split('+');
+            operands = equation.split('+');
             //console.log('result of evaluation', result);
             return {
                 equation: equation,
                 result: Number(operands[0]) + Number(operands[1])
+            };
+            case 'subtract':
+            operands = equation.split('-');
+            //console.log('result of evaluation', result);
+            return {
+                equation: equation,
+                result: Number(operands[0]) - Number(operands[1])
+            };
+            case 'multiply':
+            operands = equation.split('*');
+            //console.log('result of evaluation', result);
+            return {
+                equation: equation,
+                result: Number(operands[0]) * Number(operands[1])
+            };
+            case 'divide':
+            operands = equation.split('/');
+            //console.log('result of evaluation', result);
+            return {
+                equation: equation,
+                result: Number(operands[0]) / Number(operands[1])
             };
     }
 

@@ -15,6 +15,10 @@ function onReady(){
     // Listener for the user to press the equals button
     // initiates POST
     $('#equals').on('click', postEquation);
+
+    // Listener to clear the display when the clear button
+    // is pressed
+    $('#clear').on('click', clearDisplay);
 }
 
 // function to display the number on the display
@@ -71,14 +75,37 @@ function postEquation(){
 // Send ajax GET request to recieve allEquations
 // from the server
 function getEquations(){
+    
     $.ajax({
         method: 'GET',
         url: '/equation'
     }).then(response => {
         console.log('GET - got a response from ther server',
         response);
-        
+        let numberOfEquations = response.length - 1;
+        $('#display').val(`${response[numberOfEquations].result}`);
+        render(response);
     }).catch(response => {
         console.log('There was an error in GET');
     })
+}
+
+function clearDisplay(){
+    $('#display').val('');
+}
+function render(response){
+    // display the result for this equation
+    let numberOfEquations = response.length - 1;
+    $('#display').val(`${response[numberOfEquations].result}`);
+
+    // empty equations list
+    $('#equationList').empty();
+
+    // display all equations
+    for(let equation of response){
+        $('#equationList').append(`
+            <li>${equation.equation} = ${equation.result}</li>
+        `);
+    }
+    
 }
