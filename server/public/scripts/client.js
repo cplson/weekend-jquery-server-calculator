@@ -10,6 +10,10 @@ function onReady(){
 
     // Listener for any button thats an operator
     $('.operator').on('click', inputOperator);
+
+    // Listener for the user to press the equals button
+    // initiates POST
+    $('#equals').on('click', evaluateEquation);
 }
 
 // function to display the number on the display
@@ -42,4 +46,19 @@ function inputOperator(){
     }
     // test operation variable
     console.log('operation:', operation);
+}
+
+function evaluateEquation(){
+    $.ajax({
+        method: 'POST',
+        url: '/equation',
+        data: {
+            equation: $('#display').text(),
+            operation: operation
+        }
+    }).then(response => {
+        console.log('Recieved response for POST');
+    }).catch(response => {
+        console.log("something went wrong");
+    })
 }
