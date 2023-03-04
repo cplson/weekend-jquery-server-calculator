@@ -1,6 +1,7 @@
 $(document).ready(onReady);
 
 let operation;
+
 function onReady(){
     console.log("JQuery loaded");
 
@@ -13,7 +14,7 @@ function onReady(){
 
     // Listener for the user to press the equals button
     // initiates POST
-    $('#equals').on('click', evaluateEquation);
+    $('#equals').on('click', postEquation);
 }
 
 // function to display the number on the display
@@ -48,12 +49,15 @@ function inputOperator(){
     console.log('operation:', operation);
 }
 
-function evaluateEquation(){
+// Send ajax POST request to server,
+// data: equation and operation to perform
+function postEquation(){
+    console.log($('#display').val(), operation);
     $.ajax({
         method: 'POST',
         url: '/equation',
         data: {
-            equation: $('#display').text(),
+            equation: $('#display').val(),
             operation: operation
         }
     }).then(response => {
