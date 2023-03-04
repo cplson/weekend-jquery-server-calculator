@@ -23,55 +23,42 @@ app.get('/equation', (req, res) =>{
 })
 // POST - /equation
 app.post('/equation', (req, res) => {
-    // test req.body
-    console.log('Recieved the equation from client', req.body);
     let equation = req.body.equation;
-    let operation = req.body.operation;
-    // test variables
-    console.log(equation, operation);
+    let operation = req.body.operation; 
     
+    // Push equation with result to allEquations array
     allEquations.push(evaluate(equation, operation));
-    console.log('allEquations after push:', allEquations);
 
     // send confirmation status
     res.sendStatus(201);
 })
 
+// Evaluates the expression
 function evaluate(equation, operation){
-    // test evaluate
-    console.log('in evaluate()');
     let operands;
+    let result;
     
+    // determines arithmetic operation and returns equation and result
     switch(operation){
+        // add
         case 'add':
-            operands = equation.split('+');
-            //console.log('result of evaluation', result);
-            return {
-                equation: equation,
-                result: Number(operands[0]) + Number(operands[1])
-            };
-            case 'subtract':
-            operands = equation.split('-');
-            //console.log('result of evaluation', result);
-            return {
-                equation: equation,
-                result: Number(operands[0]) - Number(operands[1])
-            };
-            case 'multiply':
+            operands = equation.split('+');        
+            result = Number(operands[0]) + Number(operands[1])          
+        // subtract
+        case 'subtract':
+            operands = equation.split('-');       
+            result = Number(operands[0]) - Number(operands[1])
+        // multiply
+        case 'multiply':
             operands = equation.split('*');
-            //console.log('result of evaluation', result);
-            return {
-                equation: equation,
-                result: Number(operands[0]) * Number(operands[1])
-            };
-            case 'divide':
+            result = Number(operands[0]) * Number(operands[1])
+            
+        // divide
+        case 'divide':
             operands = equation.split('/');
-            //console.log('result of evaluation', result);
-            return {
-                equation: equation,
-                result: Number(operands[0]) / Number(operands[1])
-            };
+            result = Number(operands[0]) / Number(operands[1])
     }
+    return result;
 
 }
 
