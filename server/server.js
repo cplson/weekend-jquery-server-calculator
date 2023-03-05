@@ -2,6 +2,7 @@ const express = require('express');
 const parser = require('body-parser');
 const app = express();
 const PORT = 8000;
+const MAX_LENGTH = 10;
 
 // Global variable to store every equation sent to the server
 let allEquations = [];
@@ -19,6 +20,7 @@ app.listen(PORT, () => {
 })
 // GET - /equation
 app.get('/equation', (req, res) =>{
+    console.log('inside server GET', allEquations);
     res.send(allEquations);
 })
 // POST - /equation
@@ -26,9 +28,13 @@ app.post('/equation', (req, res) => {
     let equation = req.body.equation;
     let operation = req.body.operation; 
     
+    console.log('inside server POST', equation);
     // Push equation with result to allEquations array
-    allEquations.push(evaluate(equation, operation));
-
+    // if list is not full
+    if(allEquations.length < MAX_LENGTH){
+        allEquations.push(evaluate(equation, operation));
+    }
+    console.log('after push:', allEquations);
     // send confirmation status
     res.sendStatus(201);
 })
@@ -43,22 +49,25 @@ function evaluate(equation, operation){
         // add
         case 'add':
             operands = equation.split('+');        
-            result = Number(operands[0]) + Number(operands[1])          
+            result = Number(operands[0]) + Number(operands[1])
+            console.log('in evaluate()', result, operation); 
+            break;         
         // subtract
         case 'subtract':
             operands = equation.split('-');       
             result = Number(operands[0]) - Number(operands[1])
+            break;
         // multiply
         case 'multiply':
             operands = equation.split('*');
             result = Number(operands[0]) * Number(operands[1])
-            
+            break;
         // divide
         case 'divide':
             operands = equation.split('/');
             result = Number(operands[0]) / Number(operands[1])
     }
-    return result;
+    return {equation, result};
 
 }
 

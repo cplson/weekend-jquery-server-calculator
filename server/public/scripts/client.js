@@ -49,14 +49,13 @@ function inputOperator(){
         case '/':
             operation = 'divide';
     }
-    // test operation variable
-    console.log('operation:', operation);
+    operation;
 }
 
 // Send ajax POST request to server,
 // data: equation and operation to perform
 function postEquation(){
-    console.log($('#display').val(), operation);
+    console.log('display before post', $('#display').val(), operation);
     $.ajax({
         method: 'POST',
         url: '/equation',
@@ -81,8 +80,10 @@ function getEquations(){
     }).then(response => {
         console.log('GET - got a response from ther server',
         response);
-        let numberOfEquations = response.length - 1;
-        $('#display').val(`${response[numberOfEquations].result}`);
+        if(response.length > 0){
+            let numberOfEquations = response.length - 1;
+            $('#display').val(`${response[numberOfEquations].result}`);
+        }   
         render(response);
     }).catch(response => {
         console.log('There was an error in GET');
@@ -96,18 +97,21 @@ function clearDisplay(){
 
 // renders the display and equationList on the DOM
 function render(response){
-    // display the result for this equation
-    let numberOfEquations = response.length - 1;
-    $('#display').val(`${response[numberOfEquations].result}`);
-
     // empty equations list
     $('#equationList').empty();
 
-    // display all equations
-    for(let equation of response){
-        $('#equationList').append(`
+    // display the result for this equation
+    if(response.length > 0){
+
+        let numberOfEquations = response.length - 1;
+        $('#display').val(`${response[numberOfEquations].result}`);
+            
+        // display all equations
+        for(let equation of response){
+            $('#equationList').append(`
             <li>${equation.equation} = ${equation.result}</li>
-        `);
+            `);
+        }
     }
-    
+        
 }
