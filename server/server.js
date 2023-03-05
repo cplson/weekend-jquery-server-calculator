@@ -1,7 +1,7 @@
 const express = require('express');
 const parser = require('body-parser');
 const app = express();
-const PORT = 8000;
+const PORT = 5000;
 const MAX_LENGTH = 10;
 
 // Global variable to store every equation sent to the server
@@ -65,7 +65,8 @@ function evaluate(equation, operation){
         // divide
         case 'divide':
             operands = equation.split('/');
-            result = Number(operands[0]) / Number(operands[1])
+            // rounds to four decimal places if necessary
+            result = Math.round(Number((operands[0]) / Number(operands[1]) * 10000)) / 10000;
     }
     return {equation, result};
 

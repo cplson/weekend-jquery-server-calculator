@@ -10,7 +10,9 @@ function onReady(){
     $('.number').on('click', inputDigit);
 
     // Listener for any button thats an operator
+    
     $('.operator').on('click', inputOperator);
+    
 
     // Listener for the user to press the equals button
     // initiates POST
@@ -27,50 +29,67 @@ function inputDigit(){
     let displayString = $('#display').val();
     // Concatinates the digit or decimal clicked to the end of the display
     $('#display').val(`${displayString + $(this).text()}`);
+    
 }
 
 function inputOperator(){
-    // Assign the current display text to a string 'displayString'
-    let displayString = $('#display').val();
-    // Concatinates the digit or decimal clicked to the end of the display
-    $('#display').val(`${displayString + $(this).text()}`);
+    if(operation === undefined){
 
-    // Switch to set a string variable to the operation
-    switch($(this).text()){
-        case '+':
-            operation = 'add';
-            break;
-        case '-':
-            operation = 'subtract';
-            break;
-        case '*':
-            operation = 'multiply';
-            break;
-        case '/':
-            operation = 'divide';
+        // Assign the current display text to a string 'displayString'
+        let displayString = $('#display').val();
+        // Concatinates the digit or decimal clicked to the end of the display
+        $('#display').val(`${displayString + $(this).text()}`);
+        
+        // Switch to set a string variable to the operation
+        switch($(this).text()){
+            case '+':
+                operation = 'add';
+                break;
+            case '-':
+                operation = 'subtract';
+                break;
+            case '*':
+                operation = 'multiply';
+                break;
+            case '/':
+                operation = 'divide';
+        }
     }
-    operation;
+                    
 }
-
 // Send ajax POST request to server,
 // data: equation and operation to perform
 function postEquation(){
-    console.log('display before post', $('#display').val(), operation);
-    $.ajax({
-        method: 'POST',
-        url: '/equation',
-        data: {
-            equation: $('#display').val(),
-            operation: operation
+    console.log('display before post', $('#display').val(), operation, $('#display').val().length);
+    
+    // input validation checks that display:
+        // string contains an operator
+        // string length > 2
+        // first and last characters are numbers
+        if(operation != undefined &&
+            $('#display').val().length > 2 &&
+            $('#display').val()[0] >= '0' && $('#display').val()[0] <= '9' &&
+            $('#display').val()[$('#display').val().length - 1] >= '0' && 
+            $('#display').val()[$('#display').val().length - 1] <= '9'
+            ){
+                console.log('entered onClick');
+            
+                $.ajax({
+                    method: 'POST',
+                    url: '/equation',
+                    data: {
+                        equation: $('#display').val(),
+                        operation: operation
+                    }
+                }).then(response => {
+                    console.log('Recieved response for POST');
+                    getEquations();
+                }).catch(response => {
+                    console.log("something went wrong");
+                })
+            }
         }
-    }).then(response => {
-        console.log('Recieved response for POST');
-        getEquations();
-    }).catch(response => {
-        console.log("something went wrong");
-    })
-}
-
+            
 // Send ajax GET request to recieve allEquations
 // from the server
 function getEquations(){  
@@ -88,11 +107,15 @@ function getEquations(){
     }).catch(response => {
         console.log('There was an error in GET');
     })
+    // Reset operation for input validation
+    operation = undefined;
 }
 
 // Clears the display on clear button click
 function clearDisplay(){
     $('#display').val('');
+    // Reset operation for input validation
+    operation = undefined;
 }
 
 // renders the display and equationList on the DOM
